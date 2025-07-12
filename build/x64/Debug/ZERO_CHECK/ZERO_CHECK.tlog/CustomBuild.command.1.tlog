@@ -1,0 +1,10 @@
+^C:\USERS\ALEXR\ONEDRIVE\DESKTOP\EXPERIMENTAL_CODE\LOGGER\BUILD\CMAKEFILES\26408B91F6231C26C5E6335842BD7BA8\GENERATE.STAMP.RULE
+setlocal
+"C:\Program Files\CMake\bin\cmake.exe" -SC:/Users/alexr/OneDrive/Desktop/experimental_code/logger -BC:/Users/alexr/OneDrive/Desktop/experimental_code/logger/build --check-stamp-list CMakeFiles/generate.stamp.list --vs-solution-file C:/Users/alexr/OneDrive/Desktop/experimental_code/logger/build/Logger.sln
+if %errorlevel% neq 0 goto :cmEnd
+:cmEnd
+endlocal & call :cmErrorLevel %errorlevel% & goto :cmDone
+:cmErrorLevel
+exit /b %1
+:cmDone
+if %errorlevel% neq 0 goto :VCEnd

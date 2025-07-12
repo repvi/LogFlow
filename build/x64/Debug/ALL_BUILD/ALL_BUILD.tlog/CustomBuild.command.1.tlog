@@ -1,0 +1,10 @@
+^C:\USERS\ALEXR\ONEDRIVE\DESKTOP\EXPERIMENTAL_CODE\LOGGER\CMAKELISTS.TXT
+setlocal
+"C:\Program Files\CMake\bin\cmake.exe" -SC:/Users/alexr/OneDrive/Desktop/experimental_code/logger -BC:/Users/alexr/OneDrive/Desktop/experimental_code/logger/build --check-stamp-file C:/Users/alexr/OneDrive/Desktop/experimental_code/logger/build/CMakeFiles/generate.stamp
+if %errorlevel% neq 0 goto :cmEnd
+:cmEnd
+endlocal & call :cmErrorLevel %errorlevel% & goto :cmDone
+:cmErrorLevel
+exit /b %1
+:cmDone
+if %errorlevel% neq 0 goto :VCEnd
