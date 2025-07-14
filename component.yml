@@ -1,0 +1,7 @@
+name: LogFlow
+version: 1.0.0
+description: "Logging system used for storing and retrieving logs in a paged manner."
+repository: "https://github.com/repvi/LogFlow#main"
+url: "https://github.com/repvi/LogFlow"
+license: "MIT"
+author: "repvi <https://github.com/repvi>"

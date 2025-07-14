@@ -16,6 +16,11 @@ typedef enum {
     PAGE_TYPE_WARNING,         /**< Warning level logs */
 } page_type_t;
 
+typedef enum {
+    LOGGER_DEFAULT = 0,
+    LOGGER_FLUSH
+} logger_command_t;
+
 /**
  * @struct logger_t
  * @brief Internal logger structure
@@ -42,12 +47,14 @@ LoggerHandler logger_create(int page_amount, int page_size);
  */
 void logger_destroy(LoggerHandler logger);
 
+void logger_print_page_line(LoggerHandler logger, int page_index);
+
 /**
  * @brief Prints the contents of a specific page to stdout
  * @param logger Logger instance
  * @param page_index Index of the page to print
  */
-void logger_print_page(LoggerHandler logger, int page_index);
+void logger_print_page(LoggerHandler logger, int page_index, logger_command_t command);
 
 /**
  * @brief Prints the contents of all pages to stdout
@@ -105,13 +112,13 @@ char *logger_get_page_buffer(LoggerHandler logger, int page_index);
  * @param logger Logger instance
  * @param page_index Index of the page to clear
  */
-void logger_clear_page(LoggerHandler logger, int page_index);
+void logger_flush_page(LoggerHandler logger, int page_index);
 
 /**
  * @brief Clears all pages in the logger
  * @param logger Logger instance
  */
-void logger_clear_all(LoggerHandler logger);
+void logger_flush_all(LoggerHandler logger);
 
 #ifdef __cplusplus
 }

@@ -4,7 +4,7 @@
 #include <stdio.h>
 #include <string.h>
 #include <assert.h>
-#include <stdlib.h> // for malloc/free
+#include <stdlib.h>
 
 #if defined(__STDC_VERSION__) && __STDC_VERSION__ >= 201112L
     #define ALIGNOF(type) _Alignof(type)
@@ -105,7 +105,6 @@ static void page_init(page_list *pages, uint8_t *memory, int page_amount, int pa
         logger_page_add(pages, new_page);
     }
 }
-
 // --- Logger creation ---
 LoggerHandler logger_create(int page_amount, int page_size) 
 {
@@ -138,14 +137,59 @@ LoggerHandler logger_create(int page_amount, int page_size)
     }
 }
 
-void logger_print_page(LoggerHandler logger, int page_index)
+static const char *logger_print_start_message_section(page_type_t type)
+{
+    switch(type) {
+        case PAGE_TYPE_ERROR:
+            return "error: ";
+        case PAGE_TYPE_DEFAULT:
+            return "log: ";
+        case PAGE_TYPE_INFO:
+            return "info: ";
+        case PAGE_TYPE_INFO_DEBUG:
+            return "info debug: ";
+        case PAGE_TYPE_WARNING:
+            return "warning: ";
+        default:
+            return "[failed to load type]";
+    }
+}
+
+void puts_no_newline(const char* s) {
+    while (*s) putchar(*s++);
+}
+
+void logger_print_page_line(LoggerHandler logger, int page_index)
 {
     page_list *current, *tmp;
     int index = 0;
 
     list_for_each_entry_safe(current, tmp, &logger->pages.list, list) {
         if (index == page_index) {
-            printf("Page %d: %s\n", index, current->buffer);
+            const char *end = current->buffer + logger->page_buffer_size; /* point to the end of the buffer */
+            const char *start_message = logger_print_start_message_section(current->type);
+            
+            puts_no_newline(start_message);
+            for (char *c = current->buffer; c != end && *c != '\n'; c++) {
+                putchar(*c);
+            }
+            return;
+        }
+        index++;
+    }
+}
+
+void logger_print_page(LoggerHandler logger, int page_index, logger_command_t command)
+{
+    page_list *current, *tmp;
+    int index = 0;
+
+    list_for_each_entry_safe(current, tmp, &logger->pages.list, list) {
+        if (index == page_index) {
+            printf("Page%d:\n%s\n", index, current->buffer);
+            if (command == LOGGER_FLUSH) {
+                logger_flush_page(logger, page_index);
+            }
             return;
         }
         index++;
@@ -282,7 +326,7 @@ char *logger_get_page_buffer(LoggerHandler logger, int page_index)
     return NULL; // Page not found
 }
 
-void logger_clear_page(LoggerHandler logger, int page_index)
+void logger_flush_page(LoggerHandler logger, int page_index)
 {
     page_list *current, *tmp;
     list_for_each_entry_safe(current, tmp, &logger->pages.list, list) {
@@ -296,7 +340,7 @@ void logger_clear_page(LoggerHandler logger, int page_index)
     }
 }
 
-void logger_clear_all(LoggerHandler logger)
+void logger_flush_all(LoggerHandler logger)
 {
     page_list *current, *tmp;
     list_for_each_entry_safe(current, tmp, &logger->pages.list, list) {
