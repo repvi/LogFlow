@@ -1,4 +1,4 @@
-name: LogFlow
+name: logflow
 version: 1.0.0
 description: "Logging system used for storing and retrieving logs in a paged manner."
 repository: "https://github.com/repvi/LogFlow#main"
